@@ -84,9 +84,21 @@ class Helper_Cloudfiles {
 	
 	/*
 	Cloudfiles::GetContainerFiles($container_name,$limit,$offset)
-	Returns the list of files in a container - paging is controlled by $limit and $offset
+	Returns the list of files in a container - paging is controlled by $limit and $start_from_filename
+	If you provide $start_from_filename, the result set will start with the file 
+	immediately following the one provided.
+	For example - one could loop results with the following code:
+	
+		Helper_Cloudfiles::Connect();
+		$i = 0;
+		$l = 5;
+		do {
+			$results = Helper_Cloudfiles::GetContainerFiles('container_name',$l,( isset($results[(count($results)-1)]) ?($results[(count($results)-1)] : NULL ));
+			$i++;
+		} while( count($results) );
+	
 	*/
-	public static function GetContainerFiles($container_name,$limit = 0,$offset = NULL) {
+	public static function GetContainerFiles($container_name,$limit = 0,$start_from_filename = NULL) {
 
 		try {
 			
@@ -108,7 +120,7 @@ class Helper_Cloudfiles {
 			
 		}
 		
-		$result = $container->list_objects($limit,$offset);
+		$result = $container->list_objects($limit,$start_from_filename);
 
 		return $result;
 
