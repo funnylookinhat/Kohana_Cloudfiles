@@ -83,6 +83,38 @@ class Helper_Cloudfiles {
 	}
 	
 	/*
+	Cloudfiles::GetContainerFiles($container_name,$limit,$offset)
+	Returns the list of files in a container - paging is controlled by $limit and $offset
+	*/
+	public static function GetContainerFiles($container_name,$limit = 0,$offset = NULL) {
+
+		try {
+			
+			$container = self::$cloud_conn->get_container($container_name);
+			
+			if( ! $container ) {
+				
+				return false;
+				
+			}
+			
+		} catch( NoSuchContainerException $e ) {
+			
+			return false;
+			
+		} catch( InvalidResponseException $e ) {
+			
+			return false;
+			
+		}
+		
+		$result = $container->list_objects($limit,$marker);
+
+		return $result;
+
+	}
+	
+	/*
 	Cloudfiles::UploadFile($container_name, $local_filepath)
 	Uploads the file at $local_filepath to $container_name using $cloud_conn
 	Returns true on success, false on failure.
