@@ -108,7 +108,7 @@ class Helper_Cloudfiles {
 			
 		}
 		
-		$result = $container->list_objects($limit,$marker);
+		$result = $container->list_objects($limit,$offset);
 
 		return $result;
 
